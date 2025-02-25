@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Data Mahasiswa</title>
+    
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" type="text/css" href="/public/style.css" />
+</head>
+<body class="bg-light">
+
+<div class="container mt-5">
+    <h2 class="text-center mb-4">Manajemen Data Mahasiswa</h2>
+
+    <!-- Form Tambah Mahasiswa -->
+    <div class="card p-4 mb-4">
+        <h4 class="mb-3">Tambah Mahasiswa</h4>
+        <form id="addMahasiswaForm">
+            <div class="row">
+                <div class="col-md-3">
+                    <input type="text" class="form-control" id="nama" name="nama" placeholder="Nama" required>
+                </div>
+                <div class="col-md-3">
+                    <input type="text" class="form-control" id="nim" name="nim" placeholder="NIM" required>
+                </div>
+                <div class="col-md-3">
+                    <input type="text" class="form-control" id="jurusan" name="jurusan" placeholder="Jurusan" required>
+                </div>
+                <div class="col-md-3">
+                    <button type="submit" class="btn btn-primary w-100">Tambah</button>
+                </div>
+            </div>
+        </form>
+    </div>
+
+    <!-- Tabel Mahasiswa -->
+    <div class="card p-4">
+        <h4 class="mb-3">Daftar Mahasiswa</h4>
+        <table class="table table-bordered text-center">
+            <thead class="table-dark">
+                <tr>
+                    <th>ID</th>
+                    <th>Nama</th>
+                    <th>NIM</th>
+                    <th>Jurusan</th>
+                    <th>Aksi</th>
+                </tr>
+            </thead>
+            <tbody id="mahasiswaList">
+                <% mahasiswa.forEach(m => { %>
+                <tr>
+                    <td><%= m.id %></td>
+                    <td><%= m.nama %></td>
+                    <td><%= m.nim %></td>
+                    <td><%= m.jurusan %></td>
+                    <td>
+                        <button class="btn btn-warning btn-sm edit-btn" data-id="<%= m.id %>">Edit</button>
+                        <button class="btn btn-danger btn-sm delete-btn" data-id="<%= m.id %>">Hapus</button>
+                    </td>
+                </tr>
+                <% }); %>
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<!-- Bootstrap & jQuery -->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script src="/public/script.js"></script>
+
+</body>
+</html>

@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Edit Mahasiswa</title>
+    <link rel="stylesheet" type="text/css" href="/public/style.css" />
+  </head>
+  <body>
+    <h2>Edit Mahasiswa</h2>
+    <form action="/mahasiswa/update/<%= mahasiswa._id %>" method="POST">
+      <input type="text" name="nama" value="<%= mahasiswa.nama %>" required />
+      <input type="text" name="nim" value="<%= mahasiswa.nim %>" required />
+      <input type="text" name="jurusan" value="<%= mahasiswa.jurusan %>" required />
+      <button type="submit">Update</button>
+    </form>
+  </body>
+</html>
