@@ -1,44 +1,50 @@
 const Task = require("../models/taskModel");
 
-const taskController = {
-  createTask: async (req, res) => {
-    const { title, description } = req.body;
-    const userId = req.user.id;
-    try {
-      const taskId = await Task.create(userId, title, description);
-      res.status(201).json({ taskId });
-    } catch (err) {
-      res.status(500).json({ message: "Task creation failed" });
-    }
-  },
-  getTasks: async (req, res) => {
-    const userId = req.user.id;
-    try {
-      const tasks = await Task.findAllByUserId(userId);
-      res.json(tasks);
-    } catch (err) {
-      res.status(500).json({ message: "Failed to fetch tasks" });
-    }
-  },
-  updateTask: async (req, res) => {
-    const { id } = req.params;
-    const { title, description, completed } = req.body;
-    try {
-      await Task.update(id, title, description, completed);
-      res.json({ message: "Task updated" });
-    } catch (err) {
-      res.status(500).json({ message: "Task update failed" });
-    }
-  },
-  deleteTask: async (req, res) => {
-    const { id } = req.params;
-    try {
-      await Task.delete(id);
-      res.json({ message: "Task deleted" });
-    } catch (err) {
-      res.status(500).json({ message: "Task deletion failed" });
-    }
-  },
+const createTask = async (req, res) => {
+  const { title, category, deadline } = req.body;
+  try {
+    const task = new Task({ title, category, deadline, user: req.user.id });
+    await task.save();
+    res.status(201).json(task);
+  } catch (err) {
+    res.status(400).json({ message: err.message });
+  }
 };
 
-module.exports = taskController;
+const getTasks = async (req, res) => {
+  try {
+    const tasks = await Task.find({ user: req.user.id });
+    res.json(tasks);
+  } catch (err) {
+    res.status(400).json({ message: err.message });
+  }
+};
+
+const updateTask = async (req, res) => {
+  const { id } = req.params;
+  const { title, category, deadline, status } = req.body;
+  try {
+    const task = await Task.findByIdAndUpdate(id, { title, category, deadline, status }, { new: true });
+    if (!task) {
+      return res.status(404).json({ message: "Task not found" });
+    }
+    res.json(task);
+  } catch (err) {
+    res.status(400).json({ message: err.message });
+  }
+};
+
+const deleteTask = async (req, res) => {
+  const { id } = req.params;
+  try {
+    const task = await Task.findByIdAndDelete(id);
+    if (!task) {
+      return res.status(404).json({ message: "Task not found" });
+    }
+    res.json({ message: "Task deleted successfully" });
+  } catch (err) {
+    res.status(400).json({ message: err.message });
+  }
+};
+
+module.exports = { createTask, getTasks, updateTask, deleteTask };
