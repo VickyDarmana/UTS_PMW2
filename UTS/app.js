@@ -1,27 +1,46 @@
+require("dotenv").config();
 const express = require("express");
-const mongoose = require("mongoose");
-const dotenv = require("dotenv");
-const cors = require("cors");
+const bodyParser = require("body-parser");
+const cookieParser = require("cookie-parser");
+const authRoutes = require("./routes/authRoutes");
+const taskRoutes = require("./routes/taskRoutes");
 const socketio = require("socket.io");
-const connectDB = require("./config/db");
-
-dotenv.config();
+const db = require("./config/db");
+const jwt = require("jsonwebtoken");
 
 const app = express();
-const PORT = process.env.PORT || 3000;
+app.use(bodyParser.urlencoded({ extended: true }));
+app.use(cookieParser());
 
-// Middleware
-app.use(cors());
-app.use(express.json());
 
-// Database connection
-connectDB();
+app.set("view engine", "ejs");
+
+
+app.use((req, res, next) => {
+    const token = req.cookies.token;
+    if (token) {
+        try {
+            req.user = jwt.verify(token, process.env.JWT_SECRET);
+            res.locals.user = req.user;
+        } catch (error) {
+            req.user = null;
+            res.locals.user = null;
+        }
+    } else {
+        req.user = null;
+        res.locals.user = null;
+    }
+    next();
+});
 
 // Routes
-app.use("/auth", require("./routes/authRoutes"));
-app.use("/tasks", require("./routes/taskRoutes"));
+app.use("/auth", authRoutes);
+app.use("/tasks", taskRoutes);
 
-const server = app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
+// Home Redirect
+app.get("/", (req, res) => res.redirect("/tasks"));
+
+app.listen(4000, () => console.log("Server running on http://localhost:4000"));
 
 // WebSocket setup
 const io = socketio(server);

@@ -1,19 +1,12 @@
 const mongoose = require("mongoose");
-const dotenv = require("dotenv");
 
-dotenv.config();
+mongoose.connect("mongodb://127.0.0.1:27017/miniproject", {
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+});
 
-const connectDB = async () => {
-  try {
-    await mongoose.connect(process.env.MONGO_URI, {
-      useNewUrlParser: true,
-      useUnifiedTopology: true,
-    });
-    console.log("MongoDB connected");
-  } catch (err) {
-    console.error(err.message);
-    process.exit(1);
-  }
-};
+const db = mongoose.connection;
+db.on("error", console.error.bind(console, "Database connection failed!"));
+db.once("open", () => console.log("Connected to MongoDB successfully!"));
 
-module.exports = connectDB;
+module.exports = db;
