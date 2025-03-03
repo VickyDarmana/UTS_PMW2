@@ -4,7 +4,6 @@ const bodyParser = require("body-parser");
 const cookieParser = require("cookie-parser");
 const authRoutes = require("./routes/authRoutes");
 const taskRoutes = require("./routes/taskRoutes");
-const socketio = require("socket.io");
 const db = require("./config/db");
 const jwt = require("jsonwebtoken");
 
@@ -42,9 +41,3 @@ app.get("/", (req, res) => res.redirect("/tasks"));
 
 app.listen(4000, () => console.log("Server running on http://localhost:4000"));
 
-// WebSocket setup
-const io = socketio(server);
-io.on("connection", (socket) => {
-  console.log("New client connected");
-  socket.on("disconnect", () => console.log("Client disconnected"));
-});
