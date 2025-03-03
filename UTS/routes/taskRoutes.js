@@ -18,4 +18,20 @@ router.post("/update/:id", authMiddleware, taskController.updateTask);
 // Delete Task
 router.post("/delete/:id", authMiddleware, taskController.deleteTask);
 
+router.post("/", async (req, res) => {
+    try {
+        const { title, category, deadline, status } = req.body;
+        const newTask = new Task({ title, category, deadline, status });
+        await newTask.save();
+
+        // Emit event ke WebSocket untuk semua klien
+        req.io.emit("newTask", { message: `New task added: ${title}` });
+
+        res.redirect("/tasks");
+    } catch (error) {
+        console.error("Error adding task:", error);
+        res.status(500).send("Internal Server Error");
+    }
+});
+
 module.exports = router;
