@@ -12,7 +12,7 @@ exports.register = async (req, res) => {
 
         const user = new User({ username, password });
         await user.save();
-        res.status(201).redirect("/auth/login"); // Redirect to login page after registering
+        res.status(201).redirect("/auth/login"); // Langsung direct ke halaman utama setelah login
     } catch (error) {
         res.status(500).json({ error: error.message });
     }

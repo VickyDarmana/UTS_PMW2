@@ -10,7 +10,7 @@ exports.getTasks = async (req, res) => {
     }
 };
 
-// Create a new task
+// Create task baru
 exports.createTask = async (req, res) => {
     try {
         const { title, category, deadline, status } = req.body;
@@ -19,10 +19,10 @@ exports.createTask = async (req, res) => {
             category,
             deadline,
             status,
-            user_id: req.user.userId, // Get user from JWT
+            user_id: req.user.userId, 
         });
         await task.save();
-        res.redirect("/tasks"); // Redirect instead of sending JSON
+        res.redirect("/tasks"); 
     } catch (error) {
         res.status(500).send(error.message);
     }
@@ -39,7 +39,7 @@ exports.editTaskForm = async (req, res) => {
     }
 };
 
-// Update a task
+// Update task
 exports.updateTask = async (req, res) => {
     try {
         const { title, category, deadline, status } = req.body;
@@ -47,17 +47,17 @@ exports.updateTask = async (req, res) => {
             { _id: req.params.id, user_id: req.user.userId },
             { title, category, deadline, status }
         );
-        res.redirect("/tasks"); // Redirect instead of sending JSON
+        res.redirect("/tasks"); 
     } catch (error) {
         res.status(500).send(error.message);
     }
 };
 
-// Delete a task
+// Delete task
 exports.deleteTask = async (req, res) => {
     try {
         await Task.findOneAndDelete({ _id: req.params.id, user_id: req.user.userId });
-        res.redirect("/tasks"); // Redirect instead of sending JSON
+        res.redirect("/tasks"); 
     } catch (error) {
         res.status(500).send(error.message);
     }
